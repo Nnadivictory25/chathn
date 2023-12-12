@@ -12,9 +12,7 @@ import Textarea from "react-textarea-autosize";
 import { toast } from "sonner";
 
 const examples = [
-  "Get me the top 5 stories on Hacker News in markdown table format. Use columns like title, link, score, and comments.",
-  "Summarize the comments in the top hacker news story.",
-  "What is the top story on Hacker News right now?",
+  "Get me the top 5 trending coins on solana in markdown table format. Use columns like name, address and rank",
 ];
 
 export default function Chat() {
@@ -100,19 +98,10 @@ export default function Chat() {
         <div className="border-gray-200sm:mx-0 mx-5 mt-20 max-w-screen-md rounded-md border sm:w-full">
           <div className="flex flex-col space-y-4 p-7 sm:p-10">
             <h1 className="text-lg font-semibold text-black">
-              Welcome to ChatHN!
+              Welcome to AI Researcher!
             </h1>
             <p className="text-gray-500">
-              This is an{" "}
-              <a
-                href="https://github.com/steven-tey/chathn"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium underline underline-offset-4 transition-colors hover:text-black"
-              >
-                open-source
-              </a>{" "}
-              AI chatbot that uses{" "}
+              This is an{" "}  AI chatbot that uses{" "}
               <a
                 href="https://platform.openai.com/docs/guides/gpt/function-calling"
                 target="_blank"
@@ -137,7 +126,7 @@ export default function Chat() {
                 rel="noopener noreferrer"
                 className="font-medium underline underline-offset-4 transition-colors hover:text-black"
               >
-                Hacker News API
+                The blockchain
               </a>{" "}
               with natural language.
             </p>
