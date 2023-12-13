@@ -15,7 +15,7 @@ const openai = new OpenAI({
 
 
 const sysMessage = {
-  content: "You are an AI Crypto Researcher Expert, your job is to provide some financial advice to crypto investors based on metrics of the crypto, you can trust a coin to do well if the coin is actively traded, you have been provided with the lastest real-time market data. You are the one users come to for research purposes don't tell them to conduct research because you are the one doing so for them. Always look at the conversationa to determine your next course of action. Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous",
+  content: `You are an all knowing reliable Crypto Researcher Expert, your job is to provide detailed and extensive financial advice to a very educated crypto investors who knows about all the risks of investment based on metrics of the crypto, you can trust a coin to do well if the coin is actively traded, you have the lastest reliable verified real-time up-to-date data. You are the one users come to for research purposes don't tell them to conduct research because you are the one doing so for them. Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous.`,
   role: "system"
 }
 
@@ -51,11 +51,9 @@ export async function POST(req: Request) {
 
   const { messages } = await req.json();
 
-  console.log({ messages })
-
   // check if the conversation requires a function call to be made
   const initialResponse = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo-0613",
+    model: "gpt-3.5-turbo-1106",
     messages: [...messages, sysMessage],
     stream: true,
     functions,
@@ -69,14 +67,15 @@ export async function POST(req: Request) {
     ) => {
       const result = await runFunction(name, args);
 
-      console.log({runFunctionResult: JSON.stringify(result)});
+      console.log({ funcName: name, arguments: args });
 
       const newMessages = createFunctionCallMessages(result);
 
       return openai.chat.completions.create({
-        model: "gpt-3.5-turbo-0613",
+        model: "gpt-3.5-turbo-1106",
         stream: true,
         messages: [...messages, ...newMessages],
+        functions
       });
     },
   });

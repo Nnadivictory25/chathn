@@ -85,7 +85,7 @@ export const functions: CompletionCreateParams.Function[] = [
   {
     name: "get_top_coins",
     description:
-      "Get the top trending crypto coins from DexTools API. Also returns the token address. Always ask for the chain if not provided",
+      "Get the top trending crypto coins from DexTools API. Also returns the token address.",
     parameters: {
       type: "object",
       properties: {
@@ -101,7 +101,7 @@ export const functions: CompletionCreateParams.Function[] = [
   {
     name: "get_coin_info",
     description:
-      "Get onchain information about any coin by just using the coin name. Also gets the coins address",
+      "Get realtime up-to-date onchain information like volume, number of buys, sells and more about any coin by just using the coin name or pair name (e.g: 'coin chain') from Dexscreener live API. Also gets the coins address",
     parameters: {
       type: "object",
       properties: {
@@ -127,34 +127,45 @@ export const functions: CompletionCreateParams.Function[] = [
       },
       required: ["id"],
     },
-  },
-  {
-    name: "summarize_top_story",
-    description:
-      "Summarize the top story from Hacker News, including both the story and its comments. Also returns the Hacker News URL to the story and each comment.",
-    parameters: {
-      type: "object",
-      properties: {},
-      required: [],
-    },
-  },
+  }
 ];
 
 async function get_top_coins(chain: string) {
+  console.log({chain: chain});
+
   const response = await fetch(endpoint + `ranking/${chain}/gainers`, {
     headers
   });
   const { data } = await response.json();
 
-  // Use slice to get the first 10 items
   const topCoins = data.slice(0, 10).map((item: any) => ({
     ...item,
-    tokenAddress: item.mainToken.address
+    tokenAddress: item.mainToken.address,
+    variation24h: Math.ceil(item.variation24h) + "%"
   }));
 
-  console.log({ url: endpoint + `ranking/${chain}/gainers` });
+  console.log({topCoins});
+
   return topCoins;
 }
+
+// async function get_top_coins(chain: string) {
+//   console.log({chain: chain});
+
+//   const response = await fetch(endpoint + `ranking/${chain}/gainers`, {
+//     headers
+//   });
+//   const { data } = await response.json();
+
+//   const topCoins = data.slice(0, 10).map((item: any) => ({
+//     ...item,
+//     tokenAddress: item.mainToken.address
+//   }));
+
+//   console.log({topCoins});
+
+//   return topCoins;
+// }
 
 
 async function get_coin_score(chain: string = "ether", address: string) {
@@ -168,11 +179,19 @@ async function get_coin_info(coin: string) {
   const response = await fetch(dsEndpoint + `${coin}`);
   const { pairs } = await response.json();
 
-  const matchingCoin = pairs[0]
+  console.log({pairs});
 
-  console.log({matchingCoin});
+  // const matchingCoin = pairs[0]
 
-  return {...matchingCoin, address: matchingCoin.baseToken.address}
+  // console.log({ matchingCoin });
+  
+  const matchingCoins = pairs.slice(0, 5).map((item: any) => ({
+    ...item,
+    address: item.baseToken.address
+  }));
+
+
+  return matchingCoins
   
 }
 
